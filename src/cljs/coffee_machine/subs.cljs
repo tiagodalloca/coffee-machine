@@ -3,6 +3,6 @@
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- ::name
+ ::coffees
  (fn [db]
-   (:name db)))
+   (:coffees db)))
