@@ -33,7 +33,7 @@
            na (assoc already c cn)]
        (if (zero? nm)
          {:coins na}
-         (if (<= nm (first coins))
+         (if (< nm (first coins))
            (if (<= (count coins) 1)
              {:remainer? true
               :remainer nm
