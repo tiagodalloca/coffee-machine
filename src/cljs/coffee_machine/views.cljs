@@ -42,11 +42,14 @@
         purchase (re-frame/subscribe [::subs/purchase])
         money-amount (reduce + @inserted-money)]
     [:div.machine
-     [:h1 "Cafés disponíveis:" [:br]
-      [coffees-list @coffees money-amount]
-      [:br]
-      [:div "Inserido: " (format-money money-amount)]
-      (-> (for [[e c] @coins]
-            [coin {:key c} c e]))]
+     [:div.title "~ La Machine à Café ~"]
+     [:div {:style {:text-align "center"}}
+      "Porque café é importante para nós e você"] [:br]
+
+     [:h1 "Cafés disponíveis:"] 
+     [coffees-list @coffees money-amount] 
+     [:div.inserted-money "Inserido: " (format-money money-amount)]
+     (-> (for [[e c] @coins]
+           [coin {:key c} c e]))
      [:br]
      (when-let [p @purchase] [change-panel p])]))
