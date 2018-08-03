@@ -8,3 +8,8 @@
  ::initialize-db
  (fn [_ _]
    db/default-db))
+
+(re-frame/reg-event-db
+ ::insert-coin
+ (fn [current-db [_ value]]
+   (update current-db :inserted-money conj value)))

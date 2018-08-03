@@ -1,3 +1,11 @@
 body {
-  color: red;
+  color: #4a2323;
+}
+
+.coffees-list, .enabled {
+  color: #317e63;
+}
+
+.coffees-list, .disabled {
+  color: gray;
 }
