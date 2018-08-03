@@ -13,3 +13,47 @@
  ::insert-coin
  (fn [current-db [_ value]]
    (update current-db :inserted-money conj value)))
+
+(defn normalize [n]
+  (cljs.reader/read-string (.toFixed n 2)))
+
+(defn- change
+  ([money cost coins] (change
+                       (normalize (- money cost)) cost
+                       (into []
+                             (comp (filter #(% 0)) (map #(% 1)))
+                             coins)
+                       {}))
+  ([money cost coins already]
+   (if (zero? money)
+     {:coins na}
+     (let [c (last coins)
+           cn (quot (* money 100) (* c 100))
+           nm (normalize (- money (* c cn)))
+           na (assoc already c cn)]
+       (if (zero? nm)
+         {:coins na}
+         (if (<= nm (first coins))
+           (if (<= (count coins) 1)
+             {:remainer? true
+              :remainer money
+              :coins na}
+             (recur money cost (pop coins) already))
+           (if (<= (count coins) 1)
+             {:remainer? true
+              :remainer money
+              :coins na}
+             (recur nm cost (pop coins) na))))))))
+
+(re-frame/reg-event-db
+ ::buy-coffee
+ (fn [{:keys [coffees coins inserted-money] :as current-db} [_ i]]
+   (let [c (change (reduce + inserted-money)
+                   (:price (coffees i))
+                   coins)
+         r? (:remainer? c)
+         r (:remainer c)]
+     (assoc current-db
+            :purchase {:change (:coins c)
+                       :coffee (coffees i)}
+            :inserted-money (if r? [r] [])))))

@@ -2,6 +2,10 @@ body {
   color: #4a2323;
 }
 
+.coffee-list, li {
+  cursor: pointer;
+}
+
 .coffees-list, .enabled {
   color: #317e63;
 }
