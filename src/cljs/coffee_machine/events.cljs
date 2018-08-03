@@ -15,7 +15,7 @@
    (update current-db :inserted-money conj value)))
 
 (defn normalize [n]
-  (cljs.reader/read-string (.toFixed n 2)))
+  (.valueOf (js/Number. (.toFixed n 2))))
 
 (defn- change
   ([money cost coins] (change
@@ -26,7 +26,7 @@
                        {}))
   ([money cost coins already]
    (if (zero? money)
-     {:coins na}
+     {:coins already}
      (let [c (last coins)
            cn (quot (* money 100) (* c 100))
            nm (normalize (- money (* c cn)))
@@ -36,12 +36,12 @@
          (if (<= nm (first coins))
            (if (<= (count coins) 1)
              {:remainer? true
-              :remainer money
+              :remainer nm
               :coins na}
              (recur money cost (pop coins) already))
            (if (<= (count coins) 1)
              {:remainer? true
-              :remainer money
+              :remainer nm
               :coins na}
              (recur nm cost (pop coins) na))))))))
 
